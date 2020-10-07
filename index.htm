@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
+	<div id="app">
+		<!-- v-for -->
+		<div v-for="(vote, index) in votes" :key="reload">
+			{{ comments[index] + ' || votes=' + vote}}
+			<button @click="plusVote(index)">+</button>
+			<button @click="minVote(index)">-</button>
+		</div>
+			<!-- voting kalau dipencet membuat bool kali + or - -->
+		<!-- input -->
+		<input type="text" v-model="input" @keyup.enter="saveComment()">
+	</div>
+	<script src="vue.js"></script>
+	<script>
+		var comment = new Vue({
+			el: '#app',
+			data: {
+				reload: 0,
+				input:'',
+				comments: [],
+				votes: [],
+				votesOrigin: [],
+				votesFromSelf: [],
+			},
+			methods: {
+				getDate: function() {
+					var d = new Date(); 
+					var date = d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate(); 
+					return date
+				},
+				saveComment: function() {
+					this.comments.push(this.input + ' || ' + this.getDate())
+					this.votes.push(0)
+					this.votesOrigin.push(0)
+					this.votesFromSelf.push(0)
+				},
+				plusVote: function(index) {
+					console.log(this.votes)
+					if (this.votesFromSelf[index] < 1) {
+						this.votesFromSelf[index] = 1
+						this.votes[index] = this.votesOrigin[index] + 1
+					}
+					else {
+						this.votesFromSelf[index] = 0
+						this.votes[index] = this.votesOrigin[index]
+					}
+					this.reload += 1
+				},
+				minVote: function(index) {
+					console.log(this.votes)
+					if (this.votesFromSelf[index] > -1) {
+						this.votesFromSelf[index] = -1
+						this.votes[index] = this.votesOrigin[index] - 1
+					}
+					else {
+						this.votesFromSelf[index] = 0
+						this.votes[index] = this.votesOrigin[index]
+					}
+					this.reload += 1
+				},
+			}
+		});
+	</script>
+</body>
+</html>
